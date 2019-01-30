@@ -6,8 +6,21 @@ if [ "$EUID" -ne 0 ]
 fi
 
 echo "Checking directories"
-mkdir -p /usr/local/bin/
-mkdir -p /usr/share/themes/
+if [ -d /usr/local/bin/ ]
+then
+	echo "/usr/local/bin/ ok"
+else
+	echo "/usr/local/bin/ is missing"
+	exit -1
+fi
+
+if [ -d /usr/share/themes/ ]
+then
+	echo "/usr/share/themes/ ok"
+else
+	echo "/usr/share/themes/ is missing"
+	exit -1
+fi
 
 pushd software/dwm
 echo "Installing dwm"
@@ -15,7 +28,7 @@ make install
 
 popd && pushd software/dmenu
 echo "Installing dmenu"
-make install 
+make install
 
 popd && pushd software/slstatus
 echo "Installing slstatus"
