@@ -46,7 +46,7 @@ static const Rule rules[] = {
     { "pcmanfm"   	  ,  NULL,      NULL,       1 << 5,       1,			-1 },
     { "Telegram"      ,  NULL,      NULL,       1 << 6,       0,			-1 },
     { "Firefox"       ,  NULL,      NULL,       1 << 1,       0,			-1 }
-};			
+};
 
 /* layout(s) */
 static const float mfact     = 0.5; /* factor of master area size [0.05..0.95] */
@@ -78,6 +78,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]   = { "dmenu_run", "-i", "-l", "20", "-p", "Search >", "-fn", "Fira Code:style=Regular:size=10" , "-nb", "#151515", "-nf", "#cfcfcf", "-sb", "#BD3538", "-sf", "#222222", "-w", "0", "-h", "20", NULL };
+static const char *passmenucmd[] = { "passmenu", "-i", "-l", "20", "-p", "Search >", "-fn", "Fira Code:style=Regular:size=10" , "-nb", "#151515", "-nf", "#cfcfcf", "-sb", "#BD3538", "-sf", "#222222", "-w", "0", "-h", "20", NULL };
 static const char *termcmd[]    = { "st", NULL };
 static const char *voldown[]    = { "pulsemixer", "--change-volume", "-5", NULL};
 static const char *volup[]      = { "pulsemixer", "--change-volume", "+5", NULL};
@@ -89,7 +90,7 @@ static const char *lightup[]	= {	"xbacklight", "-inc", "5", NULL};
 static Key keys[] = {
     /* modifier             key        		function        argument */
     { MODKEY,               XK_0,      		view,           {.ui = ~0 } },
-    { MODKEY,				XK_a,			spawn,			SHCMD("gscreenshot-cli -f ~/screenshots/ -s && notify-send \"`date`\" \"Screenshot saved\"") },
+    { MODKEY,				XK_a,			spawn,			SHCMD("scrot '%Y-%m-%d_$wx$h_scrot.png' -s -e 'mv $f ~/Pictures/screenshots/'&& notify-send \"`date`\" \"Screenshot saved\"") },
     { MODKEY,             	XK_b,      		togglebar,      {0} },
     { MODKEY,               XK_d,      		incnmaster,     {.i = -1 } },
     { MODKEY,               XK_e,      		spawn,          {.v = filemanager } },
@@ -100,16 +101,17 @@ static Key keys[] = {
     { MODKEY,               XK_k,      		focusstack,     {.i = -1 } },
     { MODKEY,               XK_l,      		setmfact,       {.f = +0.05} },
     { MODKEY,               XK_m,      		setlayout,      {.v = &layouts[2]} },
+    { MODKEY,               XK_o,      		spawn,          {.v = passmenucmd } },
     { MODKEY,               XK_p,      		spawn,          {.v = dmenucmd } },
     { MODKEY,             	XK_q,      		killclient,     {0} },
-    { MODKEY,               XK_s,      		spawn,          SHCMD("gscreenshot-cli -f ~/screenshots/ && notify-send \"`date`\" \"Screenshot saved\"") },
+    { MODKEY,               XK_s,      		spawn,          SHCMD("scrot '%Y-%m-%d_$wx$h_scrot.png' -e 'mv $f ~/Pictures/screenshots/' && notify-send \"`date`\" \"Screenshot saved\"") },
     { MODKEY,               XK_t,      		setlayout,      {.v = &layouts[0]} },
-    { MODKEY,               XK_x,      		spawn,          SHCMD("physlock") },
+    { MODKEY,               XK_x,      		spawn,          SHCMD("physlock -p \"`neofetch -L`\"") },
     { MODKEY,               XK_comma,  		focusmon,       {.i = -1 } },
     { MODKEY,               XK_equal,  		spawn,          {.v = volup } },
     { MODKEY,               XK_minus,  		spawn,          {.v = voldown } },
     { MODKEY,               XK_period, 		focusmon,       {.i = +1 } },
-    { MODKEY,               XK_space,  		setlayout,      {0} },	
+    { MODKEY,               XK_space,  		setlayout,      {0} },
     { MODKEY,            	XK_KP_Enter, 	spawn,          {.v = termcmd } },
     { MODKEY,            	XK_Return, 		spawn,          {.v = termcmd } },
     { MODKEY,               XK_Tab,    		view,           {0} },
@@ -138,7 +140,7 @@ static Key keys[] = {
 
     { MODKEY|ControlMask,   XK_j,      		pushdown,       {0} },
     { MODKEY|ControlMask,   XK_k,      		pushup,         {0} },
-    
+
 
     TAGKEYS(                XK_1,      		                0)
     TAGKEYS(                XK_2,      		                1)
